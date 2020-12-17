@@ -18,9 +18,13 @@ class HandlerOperator:
     def parse_table_name(table_name):
         """parse table name fix sqlalchemy can't insert table name with '.'.
         """
+        if '.' in table_name:
+            table_name = table_name.replace(".", "")
+        
+        if '-' in table_name:
+            table_name = table_name.replace("-", "")
             
-        return table_name.replace('.', '')
-
+        return table_name
 
 class HandlerCloseOperator(HandlerOperator):
     """Handler close operator.

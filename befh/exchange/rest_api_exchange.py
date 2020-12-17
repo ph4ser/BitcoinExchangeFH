@@ -18,9 +18,16 @@ class RestApiExchange(Exchange):
         """Load.
         """
         super().load(**kwargs)
-        ccxt_exchange = getattr(ccxt, self._name.lower(), None)
+
+        input_name = self._name.lower() if self._name != "BinanceFutures" else "binance"
+        # requires CCXT version > 1.20.31
+        input_options = {'options': { 'defaultType': 'future'}} if self._name == "BinanceFutures" else {}
+
+        print("using", input_name, input_options)
+
+        ccxt_exchange = getattr(ccxt, input_name, None)
         if ccxt_exchange:          
-            self._exchange_interface = ccxt_exchange()
+            self._exchange_interface = ccxt_exchange(input_options)
             self._exchange_interface.load_markets()
             self._check_valid_instrument()
             if is_initialize_instmt:
