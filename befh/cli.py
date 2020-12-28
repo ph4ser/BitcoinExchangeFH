@@ -12,6 +12,7 @@ from befh import Configuration, Runner
 LOGGER = logging.getLogger(__name__)
 
 
+
 @click.command()
 @click.option(
     '--configuration',
@@ -32,14 +33,19 @@ LOGGER = logging.getLogger(__name__)
     default=None,
     help='Manually archive the tables.',
     required=False)
+
 def main(configuration, debug, cold, archive):
     """Console script for BitcoinExchangeFH."""
+
     if debug:
         level = logging.DEBUG
     else:
         level = logging.INFO
 
+    # logging.basicConfig(, encoding='utf-8', level=logging.DEBUG)
+
     logging.basicConfig(
+        filename='befh.log',
         level=level,
         format='%(asctime)s %(levelname)s %(message)s')
 
