@@ -3,7 +3,7 @@ from datetime import datetime
 import re
 
 from cryptofeed import FeedHandler
-from cryptofeed.defines import L2_BOOK, TRADES, L2_BOOK_FUTURES, TRADES_FUTURES, L2_BOOK_SWAP, TRADES_SWAP, BID, ASK
+from cryptofeed.defines import L2_BOOK, TRADES, BID, ASK  # L2_BOOK_FUTURES, TRADES_FUTURES, L2_BOOK_SWAP, TRADES_SWAP, 
 from cryptofeed.callback import BookCallback, TradeCallback
 import cryptofeed.exchanges as cryptofeed_exchanges
 
@@ -39,26 +39,31 @@ class WebsocketExchange(RestApiExchange):
             raise ImportError(
                 'Cannot load exchange %s from websocket' % self._name)
 
-        contract_exchanges_use_common_channel = ['HuobiSwap','HuibiDM','KrakenFutures','BinanceFutures','Bitmex']
+        # contract_exchanges_use_common_channel = ['HuobiSwap','HuibiDM','KrakenFutures','BinanceFutures','Bitmex']
         if self._is_orders:
-            if self._type == 'spot' or self._name in contract_exchanges_use_common_channel:                
-                channels = [TRADES, L2_BOOK]
-            elif self._type == 'futures':
-                channels = [TRADES_FUTURES, L2_BOOK_FUTURES]
-            elif self._type == 'swap':
-                channels = [TRADES_SWAP, L2_BOOK_SWAP]
+
+            channels = [TRADES, L2_BOOK]
+
+            # if self._type == 'spot' or self._name in contract_exchanges_use_common_channel:                
+            #     channels = [TRADES, L2_BOOK]
+            # elif self._type == 'futures':
+            #     channels = [TRADES_FUTURES, L2_BOOK_FUTURES]
+            # elif self._type == 'swap':
+            #     channels = [TRADES_SWAP, L2_BOOK_SWAP]
 
             callbacks = {
                 channels[0]: TradeCallback(self._update_trade_callback),
                 L2_BOOK: BookCallback(self._update_order_book_callback)               
             }            
         else:
-            if self._type == 'spot' or self._name in contract_exchanges_use_common_channel:                
-                channels = [TRADES]
-            elif self._type == 'futures':
-                channels = [TRADES_FUTURES]
-            elif self._type == 'swap':
-                channels = [TRADES_SWAP]
+            channels = [TRADES]
+
+            # if self._type == 'spot' or self._name in contract_exchanges_use_common_channel:                
+            #     channels = [TRADES]
+            # elif self._type == 'futures':
+            #     channels = [TRADES_FUTURES]
+            # elif self._type == 'swap':
+            #     channels = [TRADES_SWAP]
 
             callbacks = {
                 channels[0]: TradeCallback(self._update_trade_callback),                
